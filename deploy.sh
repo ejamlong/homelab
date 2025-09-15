@@ -72,25 +72,23 @@ else
 fi
 
 # Ask for repository type
-echo -e "\e[33mWill you be using a Public or Private repository? (public/private): \e[0m"
-read REPO_TYPE
+#echo -e "\e[33mWill you be using a Public or Private repository? (public/private): \e[0m"
+#read REPO_TYPE
 
 # Prompt for repository link
-echo -e "\e[33mPlease enter the repository link: \e[0m"
-read REPO_URL
+#echo -e "\e[33mPlease enter the repository link: \e[0m"
+#read REPO_URL
 
 # Generate SSH key
 SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 if [ ! -f "$SSH_KEY_PATH" ]; then
     echo "Generating SSH key..."
-    ssh-keygen -t rsa -b 4096 -C "merox@homelab" -f "$SSH_KEY_PATH" -N ""
+    ssh-keygen -t rsa -b 4096 -C "ethan@homelab" -f "$SSH_KEY_PATH" -N ""
     
     echo -e "\e[32mYour public key is:\e[0m"
     cat "${SSH_KEY_PATH}.pub"
-    if [ "$REPO_TYPE" == "private" ]; then
-        echo -e "\e[33mAdd the public key to GitHub under Deploy Keys and press Enter...\e[0m"
-        read -r
-    fi
+    echo -e "\e[33mAdd the public key to GitHub under Deploy Keys and press Enter...\e[0m"
+    read -r
 else
     echo "SSH key already exists at $SSH_KEY_PATH."
 fi
@@ -102,48 +100,43 @@ fi
 #echo -e "\e[35m- /home/homelab/packer/ubuntu-server-jammy-docker/ubuntu-server-jammy-docker.pkr.hcl (CHANGE DEPLOYMENT_IP WITH IP WHERE YOU RUN THIS SCRIPT)\e[0m"
 
 # Test SSH connection to GitHub for private repositories
-if [ "$REPO_TYPE" == "private" ]; then
-    echo "Testing SSH connection to GitHub..."
+# if [ "$REPO_TYPE" == "private" ]; then
+  echo "Testing SSH connection to GitHub..."
     if ssh -o StrictHostKeyChecking=no -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
-        echo "SSH connection is functional."
+      echo "SSH connection is functional."
     else
-        echo "SSH connection failed. Check your SSH keys and permissions."
-        exit 1
-    fi
+      echo "SSH connection failed. Check your SSH keys and permissions."
+      exit 1
 fi
 
 # Clone the repository
 REPO_DIR="/home/homelab"
 if [ ! -d "$REPO_DIR" ]; then
     echo "Cloning repository $REPO_URL into $REPO_DIR..."
-    if [ "$REPO_TYPE" == "private" ]; then
-        GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone "$REPO_URL" "$REPO_DIR"
-    else
-        git clone "$REPO_URL" "$REPO_DIR"
-    fi
+     GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone "$REPO_URL" "$REPO_DIR"
 else
     echo "Repository already exists at $REPO_DIR."
 fi
 
 # Ask if the user has edited the specific files
-echo -e "\e[33mHave you edited the specific files declared in the tutorial?\n(Visit: \e[36mhttps://merox.dev/blog/homelab-as-code\e[33m)\e[0m"
-read -p "(yes/no): " EDITED_FILES
+#echo -e "\e[33mHave you edited the specific files declared in the tutorial?\n(Visit: \e[36mhttps://merox.dev/blog/homelab-as-code\e[33m)\e[0m"
+#read -p "(yes/no): " EDITED_FILES
 
-if [ "$EDITED_FILES" != "yes" ]; then
-    echo "Please edit the specific files declared in the tutorial before proceeding."
-    exit 0
-fi
+#if [ "$EDITED_FILES" != "yes" ]; then
+#    echo "Please edit the specific files declared in the tutorial before proceeding."
+#    exit 0
+#fi
 
 # Initialize Packer and build VM
-echo "Navigating to /home/homelab/packer..."
-cd /home/homelab/packer || exit
-echo "Initializing Packer..."
-packer init packer.pkr.hcl
-echo "Navigating to ubuntu-server-jammy-docker directory..."
-cd ubuntu-server-jammy-docker || exit
-echo "Validating Packer template..."
-packer validate -var-file='../credentials.pkr.hcl' ./ubuntu-server-jammy-docker.pkr.hcl
-echo "Building VM with Packer..."
-packer build -var-file='../credentials.pkr.hcl' ./ubuntu-server-jammy-docker.pkr.hcl
+#echo "Navigating to /home/homelab/packer..."
+#cd /home/homelab/packer || exit
+#echo "Initializing Packer..."
+#packer init packer.pkr.hcl
+#echo "Navigating to ubuntu-server-jammy-docker directory..."
+#cd ubuntu-server-jammy-docker || exit
+#echo "Validating Packer template..."
+#packer validate -var-file='../credentials.pkr.hcl' ./ubuntu-server-jammy-docker.pkr.hcl
+#echo "Building VM with Packer..."
+#packer build -var-file='../credentials.pkr.hcl' ./ubuntu-server-jammy-docker.pkr.hcl
 
 echo "Process complete!"
