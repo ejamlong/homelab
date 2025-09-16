@@ -11,25 +11,16 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-echo "[*] Updating system packages..."
-apt-get update -y && apt-get upgrade -y
-
-echo "[*] Installing dependencies..."
-apt-get install -y \
-    curl \
-    wget \
-    git \
-    unzip \
-    software-properties-common \
-    gnupg \
-    lsb-release \
-    ca-certificates
-
-echo "[*] Dependencies installed."
-
 # Function to check command existence
 check_cmd() {
     command -v "$1" >/dev/null 2>&1
+}
+
+# Function to install generic packages
+install_missing() {
+    local package=$1
+    echo "Installing $package..."
+    apt-get install -y "$package"
 }
 
 # Function to install terraform & packer from HashiCorp repo
@@ -50,7 +41,21 @@ install_ansible() {
     apt-get install -y ansible
 }
 
+# Update
+echo "[*] Updating system packages..."
+apt-get update -y && apt-get upgrade -y
+
+
 echo -e "${GREEN}Checking required tools...${NC}"
+
+for package in curl git unzip gnupg lsb-release; do
+    if check_cmd "$package"; then
+        echo -e "${GREEN}"$package" is already installed.${NC}"
+    else
+        install_missing $package
+    fi
+done
+
 
 if check_cmd terraform && check_cmd packer; then
     echo -e "${GREEN}Terraform & Packer already installed.${NC}"
