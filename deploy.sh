@@ -13,7 +13,7 @@ fi
 
 # Function to check command existence
 check_cmd() {
-    command -v "$1" >/dev/null 2>&1
+    "$1" --version >/dev/null 2>&1
 }
 
 # Function to install generic packages
