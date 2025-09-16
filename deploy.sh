@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # Colors for output
 GREEN="\033[0;32m"
@@ -11,6 +10,22 @@ if [ "$(id -u)" -ne 0 ]; then
     echo -e "${RED}This script must be run as root!${NC}"
     exit 1
 fi
+
+echo "[*] Updating system packages..."
+apt-get update -y && apt-get upgrade -y
+
+echo "[*] Installing dependencies..."
+apt-get install -y \
+    curl \
+    wget \
+    git \
+    unzip \
+    software-properties-common \
+    gnupg \
+    lsb-release \
+    ca-certificates
+
+echo "[*] Dependencies installed."
 
 # Function to check command existence
 check_cmd() {
