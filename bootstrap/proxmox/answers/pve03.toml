@@ -1,0 +1,17 @@
+[global]
+keyboard = "en"
+country = "us"
+fqdn = "pve03.longsnet.com"
+mailto = "ethan.j.long@gmail.com"
+timezone = "America/Denver"
+root-password-hashed = "$y$j9T$morFAu93dd2yZ3dZl0lwn.$.sDIMuFRbvolB9E3B4tLV/KNGUXCj0oczjJHIINQHu2"
+root-ssh-keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINrqJvg04jFyiX1X81rA+FF7DFM+9wYWbonud2F+E1O+ fedora"
+]
+
+[network]
+source = "from-dhcp"
+
+[disk-setup]
+filesystem = "zfs"
+zfs.raid = "raid0"

@@ -4,9 +4,9 @@ country = "us"
 fqdn = "pve01.longsnet.com"
 mailto = "ethan.j.long@gmail.com"
 timezone = "America/Denver"
-root-password = "12345678"
+root-password-hashed = "$y$j9T$iX6LH1iA5ECLUeclS6FGa0$HkpRxYhZ2pM2l4gLiGFafm.ynJHr1OhzxSlYcuwNrZ4"
 root-ssh-keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINrqJvg04jFyiX1X81rA+ff7DFM+9wYWbonud2F+E1O+ fedora"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINrqJvg04jFyiX1X81rA+FF7DFM+9wYWbonud2F+E1O+ fedora"
 ]
 
 [network]
@@ -15,4 +15,3 @@ source = "from-dhcp"
 [disk-setup]
 filesystem = "zfs"
 zfs.raid = "raid0"
-filter.ID_SERIAL = "SAMSUNG*"
